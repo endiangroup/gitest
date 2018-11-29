@@ -2,6 +2,7 @@ package gitest
 
 import (
 	"math/rand"
+	"net/http"
 	"net/http/httptest"
 	"time"
 )
@@ -15,8 +16,10 @@ type Server struct {
 	*httptest.Server
 	template *template
 
-	ValidRepo      string
-	NotAllowedRepo string
+	ValidRepo        string
+	NotAllowedRepo   string
+	RefsEventChan    chan *http.Request
+	ServiceEventChan chan *http.Request
 }
 
 // NewServer creates a new Server object
@@ -40,8 +43,10 @@ func NewUnstartedServer(template string) (*Server, error) {
 	}
 
 	s := &Server{
-		template:  t,
-		ValidRepo: generateRepoName(),
+		template:         t,
+		ValidRepo:        generateRepoName(),
+		RefsEventChan:    make(chan *http.Request),
+		ServiceEventChan: make(chan *http.Request),
 	}
 	s.Server = httptest.NewUnstartedServer(s.Handler())
 

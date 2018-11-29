@@ -27,6 +27,10 @@ func (s *Server) refsEndpoint(w http.ResponseWriter, r *http.Request) {
 	command.Stdout = w
 	command.Stderr = w
 	command.Run()
+
+	go func() {
+		s.RefsEventChan <- r
+	}()
 }
 
 func (s *Server) serviceEndpoint(w http.ResponseWriter, r *http.Request) {
@@ -43,6 +47,10 @@ func (s *Server) serviceEndpoint(w http.ResponseWriter, r *http.Request) {
 	command.Stdout = w
 	command.Stderr = w
 	command.Run()
+
+	go func() {
+		s.ServiceEventChan <- r
+	}()
 }
 
 func packetWrite(str string) []byte {
