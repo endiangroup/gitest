@@ -48,6 +48,15 @@ func NewUnstartedServer(template string) (*Server, error) {
 	return s, nil
 }
 
+func (s *Server) SetTemplate(name string) error {
+	t, err := newTemplate(name)
+	if err != nil {
+		return err
+	}
+	s.template = t
+	return nil
+}
+
 func generateRepoName() string {
 	size := 7
 	b := make([]byte, size)

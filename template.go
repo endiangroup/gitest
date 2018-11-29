@@ -8,8 +8,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
-	"path/filepath"
-	"runtime"
 )
 
 type template struct {
@@ -17,11 +15,7 @@ type template struct {
 }
 
 func newTemplate(name string) (*template, error) {
-	_, f, _, _ := runtime.Caller(1)
-	c, err := filepath.Abs(fmt.Sprintf("%s/%s.tgz", path.Dir(f), name))
-	if err != nil {
-		return nil, err
-	}
+	c := fmt.Sprintf("%s.tgz", name)
 	folder, err := decompress(c)
 	if err != nil {
 		return nil, err
